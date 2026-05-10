@@ -6,7 +6,7 @@
 
 ```xml
 <dependency>
-    <groupId>top.baoding</groupId>
+    <groupId>io.github.jiangdf128</groupId>
     <artifactId>baoding-snowflake</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -49,7 +49,7 @@ public void generateIds() {
 
 ```xml
 <dependency>
-    <groupId>top.baoding</groupId>
+    <groupId>io.github.jiangdf128</groupId>
     <artifactId>baoding-snowflake</artifactId>
     <version>1.0.0</version>
 </dependency>

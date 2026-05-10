@@ -22,7 +22,7 @@ BaoDing Snowflake is a distributed ID generator designed specifically for cloud-
 
 ```xml
 <dependency>
-    <groupId>top.baoding</groupId>
+    <groupId>io.github.jiangdf128</groupId>
     <artifactId>baoding-snowflake</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -31,7 +31,7 @@ BaoDing Snowflake is a distributed ID generator designed specifically for cloud-
 ### Gradle Dependency
 
 ```kotlin
-implementation("top.baoding:baoding-snowflake:1.0.0")
+implementation("io.github.jiangdf128:baoding-snowflake:1.0.0")
 ```
 
 ---

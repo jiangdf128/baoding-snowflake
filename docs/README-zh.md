@@ -22,7 +22,7 @@
 
 ```xml
 <dependency>
-    <groupId>top.baoding</groupId>
+    <groupId>io.github.jiangdf128</groupId>
     <artifactId>baoding-snowflake</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -31,7 +31,7 @@
 ### Gradle依赖
 
 ```kotlin
-implementation("top.baoding:baoding-snowflake:1.0.0")
+implementation("io.github.jiangdf128:baoding-snowflake:1.0.0")
 ```
 
 ---
