@@ -18,12 +18,14 @@
 
 ### 核心参数对比
 
-| 方案 | 时间窗口 | 单实例QPS | WorkerId管理 | 依赖 |
-|-----|---------|----------|-------------|------|
-| **宝顶雪花** | **8ms** | **51.2万** | **Redis自动** | **仅Redis** |
-| Twitter Snowflake | 1ms | 12万 | 手动/ZK | Zookeeper |
-| 百度UidGenerator | 1ms | 600万 | 数据库 | MySQL |
-| 腾讯Leaf | 1ms | 50万~1000万 | ZK/数据库 | Zookeeper+MySQL |
+| 方案 | 时间窗口 | 单实例QPS | 最大实例数 | WorkerId管理 | 依赖 |
+|-----|---------|----------|-----------|-------------|------|
+| **宝顶雪花** | **8ms** | **51.2万** | **8192** | **Redis自动** | **仅Redis** |
+| Twitter Snowflake | 1ms | 12万 | 1024 | 手动/ZK | Zookeeper |
+| 百度UidGenerator | 1ms | 600万 | - | 数据库 | MySQL |
+| 腾讯Leaf | 1ms | 50万~1000万 | - | ZK/数据库 | Zookeeper+MySQL |
+
+> **最大实例数**：8192 = 1024(工作站) × 8(数据中心)，支持 K8s 横向扩展到极致规模。
 
 ### 核心优势
 
@@ -94,12 +96,14 @@ BaoDing Snowflake is a distributed ID generator designed specifically for cloud-
 
 ### Core Parameters Comparison
 
-| Implementation | Time Window | Single QPS | WorkerId Mgmt | Dependencies |
-|---------------|-------------|-----------|--------------|--------------|
-| **BaoDing** | **8ms** | **512K** | **Redis Auto** | **Redis Only** |
-| Twitter Snowflake | 1ms | 120K | Manual/ZK | Zookeeper |
-| Baidu UidGenerator | 1ms | 6M | Database | MySQL |
-| Tencent Leaf | 1ms | 500K~10M | ZK/DB | Zookeeper+MySQL |
+| Implementation | Time Window | Single QPS | Max Instances | WorkerId Mgmt | Dependencies |
+|---------------|-------------|-----------|--------------|--------------|--------------|
+| **BaoDing** | **8ms** | **512K** | **8192** | **Redis Auto** | **Redis Only** |
+| Twitter Snowflake | 1ms | 120K | 1024 | Manual/ZK | Zookeeper |
+| Baidu UidGenerator | 1ms | 6M | - | Database | MySQL |
+| Tencent Leaf | 1ms | 500K~10M | - | ZK/DB | Zookeeper+MySQL |
+
+> **Max Instances**: 8192 = 1024 (workers) × 8 (datacenters), supporting extreme K8s horizontal scaling.
 
 ### Core Advantages
 
