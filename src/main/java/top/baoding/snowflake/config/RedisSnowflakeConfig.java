@@ -10,11 +10,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 /**
  * Redis雪花ID生成器配置
  *
- * <p>
- * 配置基于Redis的雪花算法ID生成器，当 baoding.snowflake.mode=redis 时生效。
- * 要求Redis 8.0+。
- * </p>
- *
  * @author caror
  * @date 2025-03-30
  * @version 1.0
@@ -38,9 +33,6 @@ public class RedisSnowflakeConfig {
         return assembler.getIdGeneratorInstance();
     }
 
-    /**
-     * 生成实例ID（用于标识Redis中的工作站ID归属）
-     */
     private String generateInstanceId() {
         return System.getProperty("hostname", "unknown") + "-" + ProcessHandle.current().pid() + "-" + System.nanoTime();
     }

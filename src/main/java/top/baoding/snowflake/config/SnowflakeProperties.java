@@ -15,7 +15,7 @@ public class SnowflakeProperties {
     /**
      * 运行模式：local 或 redis
      */
-    private String mode = "local";
+    private String mode = "redis";
 
     /**
      * ID应用范围，如果不设置默认使用微服务名

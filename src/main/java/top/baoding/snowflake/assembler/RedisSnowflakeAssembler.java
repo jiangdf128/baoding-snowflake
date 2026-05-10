@@ -19,10 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Redis雪花ID装配器
- * <p>
- * 基于Redis自动分配/释放工作站ID，支持K8s云原生环境。
- * 要求Redis 8.0+。
- * </p>
  *
  * @author caror
  * @date 2025-03-30
@@ -32,10 +28,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class RedisSnowflakeAssembler implements SnowflakeAssembler {
 
     private static final String REDIS_KEY_PREFIX = "snowflake:";
-    private static final long TTL_SECONDS = 7 * 24 * 60 * 60; // 7天
+    private static final long TTL_SECONDS = 7 * 24 * 60 * 60;
     private static final long MAX_WORKER_IDS = 1L << SnowflakeIdGenerator.WORKSTATION_ID_BITS_LENGTH;
 
-    // 新申请WorkerId的Lua脚本
     private static final String NEW_WORKER_ID_LUA_SCRIPT = """
             local key = KEYS[1]
             local uuid = ARGV[1]
@@ -56,7 +51,6 @@ public class RedisSnowflakeAssembler implements SnowflakeAssembler {
             return -1
             """;
 
-    // 释放WorkerId脚本
     private static final String RELEASE_WORKER_ID_LUA_SCRIPT = """
             local key = KEYS[1]
             local worker_id = ARGV[1]
@@ -75,7 +69,6 @@ public class RedisSnowflakeAssembler implements SnowflakeAssembler {
             end
             """;
 
-    // 续期Lua脚本
     private static final String RENEW_LUA_SCRIPT = """
             local key = KEYS[1]
             local worker_id = ARGV[1]
@@ -126,7 +119,7 @@ public class RedisSnowflakeAssembler implements SnowflakeAssembler {
             );
             if (id != null && id >= 0) {
                 this.workerId = id;
-                log.info("[Snowflake] Successfully allocated workerId: {} for scope: {}", this.workerId, this.getSnowflakeScope());
+                log.info("[Snowflake] 已成功分配工作站ID {} 给Scope {} ", this.workerId, this.getSnowflakeScope());
             } else {
                 throw new RuntimeException(String.format("雪花算法Scope为%s的工作站ID已耗尽，请核查或更改数据中心ID...", this.getSnowflakeScope()));
             }
@@ -134,9 +127,6 @@ public class RedisSnowflakeAssembler implements SnowflakeAssembler {
         return this.workerId;
     }
 
-    /**
-     * 心跳续期（每24小时执行一次，初始延迟1小时）
-     */
     @Scheduled(fixedRate = 24 * 60 * 60 * 1000L, initialDelay = 60 * 60 * 1000L)
     private void renewLease() {
         try {
@@ -147,16 +137,13 @@ public class RedisSnowflakeAssembler implements SnowflakeAssembler {
                         String.valueOf(this.workerId),
                         String.valueOf(TTL_SECONDS)
                 );
-                log.debug("[Snowflake] Renewed lease for workerId: {}", this.workerId);
+                log.debug("[Snowflake] 已续期工作站ID {} 的租约", this.workerId);
             }
         } catch (Exception e) {
-            log.error("[Snowflake] Failed to renew lease for workerId: {}", this.workerId, e);
+            log.error("[Snowflake] 续期工作站ID {} 租约失败", this.workerId, e);
         }
     }
 
-    /**
-     * 心跳（每3分钟执行一次，初始延迟30秒）
-     */
     @Scheduled(fixedRate = 3 * 60 * 1000L, initialDelay = 30 * 1000L)
     private void heartbeat() {
         try {
@@ -167,10 +154,10 @@ public class RedisSnowflakeAssembler implements SnowflakeAssembler {
                         itemKey,
                         LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
                 );
-                log.debug("[Snowflake] Heartbeat updated for workerId: {}", this.workerId);
+                log.debug("[Snowflake] 已更新工作站ID {} 的心跳时间", this.workerId);
             }
         } catch (Exception e) {
-            log.error("[Snowflake] Failed to update heartbeat for workerId: {}", this.workerId, e);
+            log.error("[Snowflake] 更新工作站ID {} 心跳失败", this.workerId, e);
         }
     }
 
@@ -184,9 +171,9 @@ public class RedisSnowflakeAssembler implements SnowflakeAssembler {
                         String.valueOf(this.workerId),
                         instanceId
                 );
-                log.info("[Snowflake] Successfully released workerId: {}", this.workerId);
+                log.info("[Snowflake] 已成功释放工作站ID {} 资源", this.workerId);
             } catch (Exception e) {
-                log.error("[Snowflake] Failed to release workerId: {}", this.workerId, e);
+                log.error("[Snowflake] 释放工作站ID {} 失败", this.workerId, e);
             }
         }
     }
@@ -211,9 +198,9 @@ public class RedisSnowflakeAssembler implements SnowflakeAssembler {
             String itemKey = this.workerId + ":h";
             try {
                 stringRedisTemplate.opsForHash().put(redisKey, itemKey, runHistory);
-                log.info("[Snowflake] Saved run history: {}", runHistory);
+                log.info("[Snowflake] 已保存运行参数 {}", runHistory);
             } catch (Exception e) {
-                log.error("[Snowflake] Failed to save run history", e);
+                log.error("[Snowflake] 保存运行参数失败", e);
             }
         }
     }
@@ -233,9 +220,6 @@ public class RedisSnowflakeAssembler implements SnowflakeAssembler {
         this.idGenerator = idGenerator;
     }
 
-    /**
-     * 获取IdGenerator实例（懒加载）
-     */
     public IdGenerator getIdGeneratorInstance() {
         if (this.idGenerator == null) {
             synchronized (this) {
@@ -244,13 +228,14 @@ public class RedisSnowflakeAssembler implements SnowflakeAssembler {
                     if (snowflakeProperties.getDatacenterId() > maxDatacenterId || snowflakeProperties.getDatacenterId() < 0) {
                         throw new IllegalArgumentException(String.format("数据中心ID不能大于%d或小于0，当前值为%d", maxDatacenterId, snowflakeProperties.getDatacenterId()));
                     }
-                    this.idGenerator = new SnowflakeIdGenerator(
+                    SnowflakeIdGenerator snowflakeGenerator = new SnowflakeIdGenerator(
                             snowflakeProperties.getDatacenterId(),
                             this.getWorkerId(),
                             this,
                             snowflakeProperties
                     );
-                    this.idGenerator.init();
+                    snowflakeGenerator.init();
+                    this.idGenerator = snowflakeGenerator;
                 }
             }
         }

@@ -26,6 +26,7 @@ public class LocalFileSnowflakeAssembler implements SnowflakeAssembler {
     private final String port;
     private final String dataPath;
 
+    @Getter
     private IdGenerator idGenerator;
 
     public LocalFileSnowflakeAssembler(long dataCenterId, long workerId, String port, String dataPath) {
@@ -36,11 +37,6 @@ public class LocalFileSnowflakeAssembler implements SnowflakeAssembler {
         SnowflakeManager.register(this);
     }
 
-    /**
-     * 获取当前运行程序工作目录。
-     *
-     * @return 工作目录路径
-     */
     protected String getWorkDirectoryPath() {
         if (StringUtils.hasText(this.dataPath)) {
             File directory = new File(this.dataPath);
@@ -59,14 +55,13 @@ public class LocalFileSnowflakeAssembler implements SnowflakeAssembler {
 
     @Override
     public void releaseWorkerId() {
-        // Local模式不需要释放工作站ID
     }
 
     @Override
     public String getLastRunHistory() {
         File file = new File(this.getWorkDirectoryPath(), this.getIdLastTimeFileName());
         if (file.exists()) {
-            log.info("Loading last run parameters from file: {}", file.getAbsolutePath());
+            log.info("从文件 {} 中加载雪花算法ID生成器的上次运行参数...", file.getAbsolutePath());
             try (BufferedReader reader = new BufferedReader(new FileReader(file.getAbsolutePath(), java.nio.charset.StandardCharsets.UTF_8))) {
                 return reader.readLine();
             } catch (IOException e) {
@@ -81,9 +76,9 @@ public class LocalFileSnowflakeAssembler implements SnowflakeAssembler {
         File file = new File(this.getWorkDirectoryPath(), this.getIdLastTimeFileName());
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file.getAbsolutePath(), java.nio.charset.StandardCharsets.UTF_8))) {
             bw.write(runHistory);
-            log.info("Saved last run parameters: {}", runHistory);
+            log.info("已成功保存雪花算法ID生成器的上次运行参数 {}", runHistory);
         } catch (IOException e) {
-            log.error("保存文件碰到意外错误", e);
+            log.error("保存文件 {} 碰到意外错误", this.getIdLastTimeFileName(), e);
             throw new RuntimeException("保存雪花算法ID生成器的上次运行参数到文件碰到意外错误！", e);
         }
     }
@@ -91,11 +86,6 @@ public class LocalFileSnowflakeAssembler implements SnowflakeAssembler {
     @Override
     public boolean isReleased() {
         return true;
-    }
-
-    @Override
-    public IdGenerator getIdGenerator() {
-        return this.idGenerator;
     }
 
     @Override

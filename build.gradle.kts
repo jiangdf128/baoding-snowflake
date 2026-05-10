@@ -20,20 +20,14 @@ dependencyManagement {
 }
 
 dependencies {
-    // Spring Boot Starter（仅用于自动配置）
     compileOnly("org.springframework.boot:spring-boot-starter")
-
-    // Redis（要求 8.0+）
     compileOnly("org.springframework.boot:spring-boot-starter-data-redis")
-
-    // Lombok
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
-
-    // Spring Boot 配置处理器
     annotationProcessor("org.springframework.boot:spring-boot-autoconfigure-processor")
 
-    // 测试
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

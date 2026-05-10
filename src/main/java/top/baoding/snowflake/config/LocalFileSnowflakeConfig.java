@@ -10,10 +10,6 @@ import org.springframework.context.annotation.Bean;
 /**
  * 本地文件雪花ID生成器配置
  *
- * <p>
- * 配置基于本地文件管理的雪花算法ID生成器，当 baoding.snowflake.mode=local 时生效
- * </p>
- *
  * @author caror
  * @date 2025-03-30
  * @version 1.0
