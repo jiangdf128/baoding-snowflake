@@ -16,7 +16,16 @@
 
 宝顶雪花算法（BaoDing Snowflake）是一个专为云原生环境设计的分布式ID生成器，采用经典的雪花ID思想，并在其基础上进行了多项工业级优化。
 
-**核心优势**：
+### 核心参数对比
+
+| 方案 | 时间窗口 | 单实例QPS | WorkerId管理 | 依赖 |
+|-----|---------|----------|-------------|------|
+| **宝顶雪花** | **8ms** | **51.2万** | **Redis自动** | **仅Redis** |
+| Twitter Snowflake | 1ms | 12万 | 手动/ZK | Zookeeper |
+| 百度UidGenerator | 1ms | 600万 | 数据库 | MySQL |
+| 腾讯Leaf | 1ms | 50万~1000万 | ZK/数据库 | Zookeeper+MySQL |
+
+### 核心优势
 
 - **8ms时间窗口**：相比传统1ms窗口，单实例QPS提升至51.2万（业界平均12万）
 - **仅依赖Redis**：无需ZooKeeper等复杂组件，运维成本极低
@@ -29,7 +38,7 @@
 ```xml
 <!-- Maven -->
 <dependency>
-    <groupId>top.baoding</groupId>
+    <groupId>io.github.jiangdf128</groupId>
     <artifactId>baoding-snowflake</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -37,7 +46,7 @@
 
 ```kotlin
 // Gradle
-implementation("top.baoding:baoding-snowflake:1.0.0")
+implementation("io.github.jiangdf128:baoding-snowflake:1.0.0")
 ```
 
 ### 配置示例
@@ -72,7 +81,6 @@ spring:
 - [中文快速入门](docs/README-zh.md)
 - [架构设计文档](docs/ARCHITECTURE.md)
 - [部署指南](docs/DEPLOYMENT.md)
-- [方案对比](docs/COMPARISON.md)
 
 ---
 
@@ -84,7 +92,16 @@ spring:
 
 BaoDing Snowflake is a distributed ID generator designed specifically for cloud-native environments, based on the classic Snowflake ID algorithm with industrial-grade optimizations.
 
-**Core Advantages**:
+### Core Parameters Comparison
+
+| Implementation | Time Window | Single QPS | WorkerId Mgmt | Dependencies |
+|---------------|-------------|-----------|--------------|--------------|
+| **BaoDing** | **8ms** | **512K** | **Redis Auto** | **Redis Only** |
+| Twitter Snowflake | 1ms | 120K | Manual/ZK | Zookeeper |
+| Baidu UidGenerator | 1ms | 6M | Database | MySQL |
+| Tencent Leaf | 1ms | 500K~10M | ZK/DB | Zookeeper+MySQL |
+
+### Core Advantages
 
 - **8ms Time Window**: Single instance QPS up to 512,000 (vs industry average 120,000)
 - **Redis-Only Dependency**: No ZooKeeper or other complex components required
@@ -97,7 +114,7 @@ BaoDing Snowflake is a distributed ID generator designed specifically for cloud-
 ```xml
 <!-- Maven -->
 <dependency>
-    <groupId>top.baoding</groupId>
+    <groupId>io.github.jiangdf128</groupId>
     <artifactId>baoding-snowflake</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -105,7 +122,7 @@ BaoDing Snowflake is a distributed ID generator designed specifically for cloud-
 
 ```kotlin
 // Gradle
-implementation("top.baoding:baoding-snowflake:1.0.0")
+implementation("io.github.jiangdf128:baoding-snowflake:1.0.0")
 ```
 
 ### Configuration Examples
@@ -140,7 +157,6 @@ spring:
 - [English Quick Start](docs/README-en.md)
 - [Architecture Documentation](docs/ARCHITECTURE.md)
 - [Deployment Guide](docs/DEPLOYMENT.md)
-- [Comparison with Other Solutions](docs/COMPARISON.md)
 
 ---
 
