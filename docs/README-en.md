@@ -8,7 +8,7 @@ BaoDing Snowflake is a distributed ID generator designed specifically for cloud-
 
 | Feature | Description |
 |---------|-------------|
-| **8ms Time Window** | Single instance QPS up to 512,000 (vs industry average 120,000) |
+| **8ms Time Window** | Single instance QPS up to 512,000 (vs industry average 1.0.100) |
 | **Redis-Only Dependency** | No ZooKeeper or other complex components required |
 | **K8s Native Support** | Auto allocate/release WorkerId on Pod start/stop, perfect for elastic scaling |
 | **Graceful Clock Backward Handling** | Catching up rather than rejecting service, ensuring continuity |
@@ -24,14 +24,14 @@ BaoDing Snowflake is a distributed ID generator designed specifically for cloud-
 <dependency>
     <groupId>io.github.jiangdf128</groupId>
     <artifactId>baoding-snowflake</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
 ### Gradle Dependency
 
 ```kotlin
-implementation("io.github.jiangdf128:baoding-snowflake:1.0.0")
+implementation("io.github.jiangdf128:baoding-snowflake:1.0.1")
 ```
 
 ---

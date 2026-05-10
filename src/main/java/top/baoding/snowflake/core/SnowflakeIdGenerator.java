@@ -1,5 +1,6 @@
 package top.baoding.snowflake.core;
 
+import lombok.extern.slf4j.Slf4j;
 import top.baoding.snowflake.config.SnowflakeProperties;
 
 import java.time.Instant;
@@ -28,6 +29,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @date 2024-11-06
  * @version 1.0
  */
+@Slf4j
 public class SnowflakeIdGenerator implements IdGenerator {
 
     /**
@@ -181,7 +183,7 @@ public class SnowflakeIdGenerator implements IdGenerator {
         this.timestampLeftShiftLength = SEQUENCE_BITS_LENGTH + WORKSTATION_ID_BITS_LENGTH + DATACENTER_ID_BITS_LENGTH;
         this.datacenterLeftShiftLength = SEQUENCE_BITS_LENGTH + WORKSTATION_ID_BITS_LENGTH;
 
-        System.out.println("[Snowflake] 已在Spring容器中成功注册数据中心ID为" + this.dataCenterId + "和工作站ID为" + this.workerId + "的雪花算法ID生成器...");
+        log.info("[Snowflake] 已在Spring容器中成功注册数据中心ID为{}和工作站ID为{}的雪花算法ID生成器...", this.dataCenterId, this.workerId);
         this.loadLastRunHistory();
     }
 
@@ -210,7 +212,7 @@ public class SnowflakeIdGenerator implements IdGenerator {
                     }
                     this.lastTimestamp = lt;
                     this.sequence = seq;
-                    System.out.println("[Snowflake] 雪花算法ID生成器已成功加载最后运行参数值" + line);
+                    log.info("[Snowflake] 雪花算法ID生成器已成功加载最后运行参数值{}", line);
                     return;
                 }
                 throw new IllegalStateException(String.format("雪花算法ID生成器最后运行记录%s里的参数内容错误，请检查...", line));
@@ -297,7 +299,7 @@ public class SnowflakeIdGenerator implements IdGenerator {
                 if (timeBackNewIdLoopCount == 0) {
                     LocalDateTime lastTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.lastTimestamp * EVERY_FEW_MILLISECOND), ZoneId.systemDefault());
                     LocalDateTime nowTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp * EVERY_FEW_MILLISECOND), ZoneId.systemDefault());
-                    System.out.println("[Snowflake] 雪花算法ID生成器碰到时间回调，时间相差 " + (diffTimeBack * EVERY_FEW_MILLISECOND) + " 毫秒。上次时间 " + lastTime + ",当前时间 " + nowTime);
+                    log.warn("[Snowflake] 雪花算法ID生成器碰到时间回调，时间相差 {} 毫秒。上次时间 {},当前时间 {}", diffTimeBack * EVERY_FEW_MILLISECOND, lastTime, nowTime);
                 }
                 timeBackNewIdLoopCount += 1;
                 if (timeBackNewIdLoopCount >= this.properties.getTimeBackWarnLoopCount()) {
@@ -352,7 +354,7 @@ public class SnowflakeIdGenerator implements IdGenerator {
      * @return 下一时间窗口的时间戳
      */
     protected long untilNextMillis(long lastTimestamp, long diffTimeBack) {
-        System.out.println("[Snowflake] 雪花算法ID生成器碰到热点Key，" + EVERY_FEW_MILLISECOND + "毫秒内ID序列号耗尽，正等待下一" + EVERY_FEW_MILLISECOND + "毫秒到来...");
+        log.info("[Snowflake] 雪花算法ID生成器碰到热点Key，{}毫秒内ID序列号耗尽，正等待下一{}毫秒到来...", EVERY_FEW_MILLISECOND, EVERY_FEW_MILLISECOND);
         long timestamp = currentTimeEveryFewMillis() + diffTimeBack;
         while (timestamp <= lastTimestamp) {
             timestamp = currentTimeEveryFewMillis() + diffTimeBack;
