@@ -29,4 +29,11 @@ public class HexIdUtils {
         long timestamp = (id >> 22) + 21562044;
         return String.format("ID: %d | DC: %d | Worker: %d | Seq: %d", id, datacenterId, workstationId, sequence);
     }
+
+    public static String toReadableString(long id) {
+        long datacenterId = (id >> 22) & 0x07;
+        long workstationId = (id >> 12) & 0x3FF;
+        long sequence = id & 0xFFF;
+        return String.format("ID: %d | DC: %d | Worker: %d | Seq: %d", id, datacenterId, workstationId, sequence);
+    }
 }

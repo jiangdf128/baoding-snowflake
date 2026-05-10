@@ -1,0 +1,29 @@
+spring:
+  data:
+    redis:
+      password: 168168
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1ms
+          max-idle: 8
+          min-idle: 0
+      database: 0
+      cluster:
+        refresh:
+          adaptive: true
+          period: 2000
+        nodes:
+          - 192.168.3.18:6391
+          - 192.168.3.18:6392
+          - 192.168.3.18:6393
+          - 192.168.3.18:6394
+          - 192.168.3.18:6395
+          - 192.168.3.18:6396
+        max-redirects: 3
+
+baoding:
+  snowflake:
+    mode: redis
+    datacenter-id: 0
+    scope: baoding-snowflake-test

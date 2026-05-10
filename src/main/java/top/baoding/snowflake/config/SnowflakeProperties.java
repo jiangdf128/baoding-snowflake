@@ -1,6 +1,7 @@
 package top.baoding.snowflake.config;
 
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * 雪花算法配置属性
@@ -10,6 +11,7 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
+@ConfigurationProperties(prefix = "baoding.snowflake")
 public class SnowflakeProperties {
 
     /**
