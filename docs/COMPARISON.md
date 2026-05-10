@@ -43,8 +43,8 @@ Pod启动 / Pod Start
   → Auto-allocate WorkerId (Redis Lua atomic operation)
 
 Pod运行 / Pod Running
-  → 9分钟心跳保活 / 9min heartbeat
-  → 8小时续期 / 8hr renewal
+  → 3分钟心跳保活 / 3min heartbeat
+  → 24小时续期 / 24hr renewal
 
 Pod停止 / Pod Stop
   → 自动释放WorkerId（finally保障）

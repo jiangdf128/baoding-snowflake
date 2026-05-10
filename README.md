@@ -29,7 +29,7 @@
 ```xml
 <!-- Maven -->
 <dependency>
-    <groupId>com.baoding</groupId>
+    <groupId>top.baoding</groupId>
     <artifactId>baoding-snowflake</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -37,7 +37,7 @@
 
 ```kotlin
 // Gradle
-implementation("com.baoding:baoding-snowflake:1.0.0")
+implementation("top.baoding:baoding-snowflake:1.0.0")
 ```
 
 ### 配置示例
@@ -97,7 +97,7 @@ BaoDing Snowflake is a distributed ID generator designed specifically for cloud-
 ```xml
 <!-- Maven -->
 <dependency>
-    <groupId>com.baoding</groupId>
+    <groupId>top.baoding</groupId>
     <artifactId>baoding-snowflake</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -105,7 +105,7 @@ BaoDing Snowflake is a distributed ID generator designed specifically for cloud-
 
 ```kotlin
 // Gradle
-implementation("com.baoding:baoding-snowflake:1.0.0")
+implementation("top.baoding:baoding-snowflake:1.0.0")
 ```
 
 ### Configuration Examples
